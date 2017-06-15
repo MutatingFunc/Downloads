@@ -1,5 +1,5 @@
 //
-//  TextFieldController.swift
+//  AddDownloadController.swift
 //  Downloads
 //
 //  Created by James Froggatt on 14.06.2017.
@@ -8,8 +8,7 @@
 
 import UIKit
 
-class TextFieldController: UIViewController {
-	@IBOutlet private var promptLabel: UILabel!
+class AddDownloadController: UIViewController {
 	@IBOutlet private var textField: UITextField!
 	
 	override func viewDidLoad() {
@@ -24,7 +23,7 @@ class TextFieldController: UIViewController {
  var onReturn: (String) -> () = {_ in}
 }
 
-extension TextFieldController: UITextFieldDelegate {
+extension AddDownloadController: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		onReturn(textField.text ?? "")
 		self.dismiss(animated: true)
@@ -32,7 +31,7 @@ extension TextFieldController: UITextFieldDelegate {
 	}
 }
 
-extension TextFieldController: UIPopoverPresentationControllerDelegate {
+extension AddDownloadController: UIPopoverPresentationControllerDelegate {
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .popover
 	}

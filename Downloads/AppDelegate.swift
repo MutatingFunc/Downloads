@@ -8,13 +8,40 @@
 
 import UIKit
 
+let notificationCategory = "Downloads"
+let notificationMessage = "All Downloads complete"
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
-
+	
+	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+		//untested
+		DownloadManager.shared.backgroundEventCompletionHandler = completionHandler
+		let notification = UILocalNotification()
+		if let settings = application.currentUserNotificationSettings?.types {
+			notification.category = notificationCategory
+			notification.alertBody = settings.contains(.alert) ? "Finished downloading" : nil
+			notification.soundName = settings.contains(.sound) ? UILocalNotificationDefaultSoundName : nil
+		}
+		application.presentLocalNotificationNow(notification)
+		completionHandler()
+	}
+	
+	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+		var urlString = url.absoluteString
+		if urlString.hasPrefix("dl") {
+			urlString.removeFirst(2)
+		}
+		return DownloadManager.shared.beginDownload(from: urlString)
+	}
+	
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-		// Override point for customization after application launch.
+		let category = UIMutableUserNotificationCategory()
+		category.identifier = notificationCategory
+		let settings = UIUserNotificationSettings(types: [.alert, .sound], categories: [category])
+		application.registerUserNotificationSettings(settings)
 		return true
 	}
 
@@ -38,10 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func applicationWillTerminate(_ application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-	}
-
-	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
-		<#code#>
 	}
 }
 

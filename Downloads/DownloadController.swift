@@ -15,13 +15,15 @@ class DownloadController: UIViewController {
 	@IBOutlet private var collectionView: UICollectionView!
 	@IBOutlet private var deleteButton: UIButton!
 	
-	lazy private(set) var downloadManager: DownloadManager = DownloadManager(view: self)
-	lazy private(set) var fileManager: DownloadedFileManager = DownloadedFileManager(view: self)
+	private lazy var downloadManager: DownloadManager = DownloadManager.shared
+	private lazy var fileManager: DownloadedFileManager = DownloadedFileManager.shared
 	
 	private var documentInteractionController: UIDocumentInteractionController?
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		fileManager.view = self
+		downloadManager.view = self
 		collectionView.dataSource = self
 		collectionView.delegate = self
 		if #available(iOS 11, *) {
@@ -33,9 +35,9 @@ class DownloadController: UIViewController {
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == Segue.textEdit.rawValue {
-			let textFieldController = segue.target as! TextFieldController
-			segue.targetPopover?.delegate = textFieldController
-			textFieldController.onReturn = {[weak self] urlString in
+			let addDownloadController = segue.target as! AddDownloadController
+			segue.targetPopover?.delegate = addDownloadController
+			addDownloadController.onReturn = {[weak self] urlString in
 				self?.downloadManager.beginDownload(from: urlString)
 			}
 		}
@@ -75,8 +77,11 @@ private extension DownloadController {
 	@IBAction func deletePressed() {
 		UIAlertController(title: "Clear downloads", message: "Which downloads would you like to stop?", preferredStyle: .actionSheet)
 			.addAction("All", style: .destructive) {[weak self] _ in
-				self?.downloadManager.cancelAll()
-				self?.fileManager.deleteAll()
+				guard let `self` = self else {return}
+				self.collectionView.performBatchUpdates({
+					self.downloadManager.cancelAll()
+					self.fileManager.deleteAll()
+				})
 			}
 			.addAction("Complete", style: .destructive) {[weak self] _ in
 				self?.fileManager.deleteAll()
@@ -116,11 +121,7 @@ extension DownloadController: DownloadProgressView {
 		fileManager.importFile(from: tempPath, preferredFilename: preferredFilename)
 	}
 	func downloadsCancelled() {
-		if #available(iOS 10, *) {//workaround for iOS 9 NSInternalInconsistencyException
-			collectionView.reloadSections(indexSet(.downloads))
-		} else {
-			collectionView.reloadData()
-		}
+		collectionView.reloadSections(indexSet(.downloads))
 	}
 }
 extension DownloadController: DownloadedFileView {
@@ -131,11 +132,7 @@ extension DownloadController: DownloadedFileView {
 		collectionView.deleteItems(at: [indexPath(.files, index)])
 	}
 	func filesDeleted() {
-		if #available(iOS 10, *) {//workaround for iOS 9 NSInternalInconsistencyException
-			collectionView.reloadSections(indexSet(.files))
-		} else {
-			collectionView.reloadData()
-		}
+		collectionView.reloadSections(indexSet(.files))
 	}
 }
 

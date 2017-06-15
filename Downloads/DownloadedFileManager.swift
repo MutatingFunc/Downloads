@@ -21,9 +21,8 @@ class DownloadedFileManager {
 	private(set) var files: [URL] = (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil)) ?? []
 	
 	weak var view: DownloadedFileView?
-	init(view: DownloadedFileView) {
-		self.view = view
-	}
+	private init() {}
+	static let shared = DownloadedFileManager()
 	
 	func importFile(from url: URL, preferredFilename: String?) {
 		guard !self.files.contains(url) else {return}
@@ -71,5 +70,11 @@ class DownloadedFileManager {
 			view?.showError(error, title: "Deletion error")
 		}
 		view?.filesDeleted()
+	}
+}
+
+extension DownloadedFileManager: DownloadCompletionHandler {
+	func downloadCompleted(at index: Int, toTempPath tempPath: URL, preferredFilename: String) {
+		self.importFile(from: tempPath, preferredFilename: preferredFilename)
 	}
 }

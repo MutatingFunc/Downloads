@@ -10,41 +10,59 @@ import Foundation
 
 import Additions
 
-protocol DownloadProgressView: ErrorView {
+protocol DownloadCompletionHandler: AnyObject {
+	func downloadCompleted(at index: Int, toTempPath tempPath: URL, preferredFilename: String)
+}
+protocol DownloadProgressView: ErrorView, DownloadCompletionHandler {
 	func downloadBegan(at index: Int)
 	func downloadPaused(at index: Int)
 	func downloadResumed(at index: Int)
 	func download(at index: Int, gotProgress progress: Double)
 	func downloadCancelled(at index: Int)
-	func downloadCompleted(at index: Int, toTempPath tempPath: URL, preferredFilename: String)
 	func downloadsCancelled()
 }
 
 class DownloadManager {
 	private lazy var sessionDelegate: SessionDelegate = SessionDelegate(manager: self)
-	private lazy var session: URLSession = self.newSession()
+	private lazy var session: URLSession = URLSession(configuration: .background(withIdentifier: "Downloads"), delegate: self.sessionDelegate, delegateQueue: .current)
 	
 	private(set) var downloads: OrderedDictionary<URL, DownloadState> = [:]
 	
-	weak var view: DownloadProgressView?
-	init(view: DownloadProgressView) {
-		self.view = view
+	var backgroundEventCompletionHandler: (() -> ())?
+	weak var completionHandler: DownloadCompletionHandler? = DownloadedFileManager.shared
+	var view: DownloadProgressView? {
+		get {return completionHandler as? DownloadProgressView}
+		set {completionHandler = newValue}
 	}
-	
-	func newSession() -> URLSession {
-		return URLSession(configuration: .background(withIdentifier: "Downloads"), delegate: self.sessionDelegate, delegateQueue: .current)
+	private init() {
+		//creates the session (which is lazy for self-referencing),
+		//allowing handling of background tasks as soon as the shared instance is accessed;
+		//also restores any ongoing downloads
+		self.session.getTasksWithCompletionHandler {_, _, downloadTasks in
+			DispatchQueue.main.async {
+				for task in downloadTasks {
+					if let url = task.originalRequest?.url, !self.downloads.keys.contains(url) {
+						task.resume()
+						self.downloads[url] = .active(task)
+						self.view?.downloadBegan(at: self.downloads.endIndex-1)
+					}
+				}
+			}
+		}
 	}
+	static let shared = DownloadManager()
 }
 
 extension DownloadManager {
-	func beginDownload(from urlString: String) {
+	@discardableResult func beginDownload(from urlString: String) -> Bool {
 		let error = {_ = self.view?.showError($0, title: "Invalid URL")}
-		guard !urlString.isEmpty else {return error("")}
+		guard !urlString.isEmpty else {error(""); return false}
 		let urlString = urlString.contains("://")
 			? urlString
 			: "http://" + urlString
-		guard let url = URL(string: urlString) else {return error(urlString)}
+		guard let url = URL(string: urlString), !url.isFileURL && url.host != nil else {error(urlString); return false}
 		beginDownload(from: url)
+		return true
 	}
 	func beginDownload(from url: URL) {
 		guard !downloads.keys.contains(url) else {return}
@@ -96,7 +114,7 @@ private extension DownloadManager {
 		guard let index = downloads.index(where: {$0.value.task == task}) else {return}
 		downloads.remove(at: index)
 		let preferredFilename = Downloads.preferredFilename(for: task.response!)
-		view?.downloadCompleted(at: index, toTempPath: tempPath, preferredFilename: preferredFilename)
+		completionHandler?.downloadCompleted(at: index, toTempPath: tempPath, preferredFilename: preferredFilename)
 	}
 }
 
@@ -130,6 +148,11 @@ private class SessionDelegate: NSObject, URLSessionDownloadDelegate {
 		if let error = error, !((error as NSError).domain == NSURLErrorDomain && (error as NSError).code == NSURLErrorCancelled) {
 			view?.showError(error, title: "Task Error")
 		}
+	}
+	
+	func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+		manager.backgroundEventCompletionHandler?()
+		manager.backgroundEventCompletionHandler = nil
 	}
 	func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
 		view?.showError(error, title: "Session Error")

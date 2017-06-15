@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A09987F1EF1C9BC00381388 /* TextFieldController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A09987E1EF1C9BC00381388 /* TextFieldController.swift */; };
+		1A09987F1EF1C9BC00381388 /* AddDownloadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A09987E1EF1C9BC00381388 /* AddDownloadController.swift */; };
 		1A568BFB1EE8602C00336FE1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A568BFA1EE8602C00336FE1 /* AppDelegate.swift */; };
 		1A568BFD1EE8602C00336FE1 /* DownloadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A568BFC1EE8602C00336FE1 /* DownloadController.swift */; };
 		1A568C001EE8602C00336FE1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A568BFE1EE8602C00336FE1 /* Main.storyboard */; };
@@ -77,7 +77,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1A09987E1EF1C9BC00381388 /* TextFieldController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldController.swift; sourceTree = "<group>"; };
+		1A09987E1EF1C9BC00381388 /* AddDownloadController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDownloadController.swift; sourceTree = "<group>"; };
 		1A568BF71EE8602C00336FE1 /* Downloads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Downloads.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A568BFA1EE8602C00336FE1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A568BFC1EE8602C00336FE1 /* DownloadController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadController.swift; sourceTree = "<group>"; };
@@ -154,7 +154,7 @@
 				1A85FA351EE9D945002F84BD /* DownloadManager.swift */,
 				1A71824C1EF07EC600EB7B97 /* DownloadedFileManager.swift */,
 				1A568BFC1EE8602C00336FE1 /* DownloadController.swift */,
-				1A09987E1EF1C9BC00381388 /* TextFieldController.swift */,
+				1A09987E1EF1C9BC00381388 /* AddDownloadController.swift */,
 				1A85FA371EE9D9AC002F84BD /* DownloadCell.swift */,
 				1A82AE951EEB47B20007E34B /* FileCell.swift */,
 				1A568BFE1EE8602C00336FE1 /* Main.storyboard */,
@@ -264,7 +264,7 @@
 						CreatedOnToolsVersion = 9.0;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -359,7 +359,7 @@
 				1A85FA381EE9D9AD002F84BD /* DownloadCell.swift in Sources */,
 				1ABFE5301EF1420100D053BF /* Reusables.swift in Sources */,
 				1A85FA361EE9D945002F84BD /* DownloadManager.swift in Sources */,
-				1A09987F1EF1C9BC00381388 /* TextFieldController.swift in Sources */,
+				1A09987F1EF1C9BC00381388 /* AddDownloadController.swift in Sources */,
 				1A71824D1EF07EC600EB7B97 /* DownloadedFileManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

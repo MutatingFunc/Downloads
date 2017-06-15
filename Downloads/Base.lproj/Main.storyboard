@@ -30,8 +30,8 @@
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="3cu-aR-Zdt">
                                     <size key="itemSize" width="250" height="125"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="16"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="16"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DownloadCell" id="9pB-fF-On7" customClass="DownloadCell" customModule="Downloads" customModuleProvider="target">
@@ -130,10 +130,6 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Pd0-xp-J8d">
-                                    <rect key="frame" x="0.0" y="260" width="375" height="16"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </collectionReusableView>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -175,10 +171,10 @@
             </objects>
             <point key="canvasLocation" x="476" y="138.98050974512745"/>
         </scene>
-        <!--Text Field Controller-->
+        <!--Add Download Controller-->
         <scene sceneID="qDW-MG-mMs">
             <objects>
-                <viewController id="bEi-L2-b7y" customClass="TextFieldController" customModule="Downloads" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="bEi-L2-b7y" customClass="AddDownloadController" customModule="Downloads" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ei8-tf-FCd"/>
                         <viewControllerLayoutGuide type="bottom" id="rb0-Ps-b08"/>
