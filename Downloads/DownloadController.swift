@@ -118,7 +118,7 @@ extension DownloadController: DownloadProgressView {
 	}
 	func downloadCompleted(at index: Int, toTempPath tempPath: URL, preferredFilename: String) {
 		collectionView.deleteItems(at: [indexPath(.downloads, index)])
-		fileManager.importFile(from: tempPath, preferredFilename: preferredFilename)
+		fileManager.downloadCompleted(at: index, toTempPath: tempPath, preferredFilename: preferredFilename)
 	}
 	func downloadsCancelled() {
 		collectionView.reloadSections(indexSet(.downloads))

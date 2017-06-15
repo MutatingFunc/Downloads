@@ -18,13 +18,21 @@ protocol DownloadedFileView: ErrorView {
 }
 
 class DownloadedFileManager {
-	private(set) var files: [URL] = (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil)) ?? []
+	private(set) var files: [URL] = (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil))?.filter{!$0.hasDirectoryPath} ?? []
 	
 	weak var view: DownloadedFileView?
 	private init() {}
 	static let shared = DownloadedFileManager()
-	
+}
+
+extension DownloadedFileManager {
 	func importFile(from url: URL, preferredFilename: String?) {
+		func importFile(from url: URL, to target: URL) throws {
+			try fileManager.copyItem(at: url, to: target)
+			self.files.append(target)
+			view?.fileImported(at: self.files.endIndex-1)
+		}
+		
 		guard !self.files.contains(url) else {return}
 		let target = documents.appendingPathComponent(preferredFilename ?? url.lastPathComponent)
 		do {
@@ -44,11 +52,6 @@ class DownloadedFileManager {
 			}
 			view?.showError("File named \"\(target.lastPathComponent)\" already exists", title: "Import Error")
 		}
-	}
-	private func importFile(from url: URL, to target: URL) throws {
-		try fileManager.copyItem(at: url, to: target)
-		self.files.append(target)
-		view?.fileImported(at: self.files.endIndex-1)
 	}
 	func deleteFile(at url: URL) {
 		guard let index = files.index(of: url) else {return}
@@ -74,7 +77,7 @@ class DownloadedFileManager {
 }
 
 extension DownloadedFileManager: DownloadCompletionHandler {
-	func downloadCompleted(at index: Int, toTempPath tempPath: URL, preferredFilename: String) {
+	func downloadCompleted(at _: Int, toTempPath tempPath: URL, preferredFilename: String) {
 		self.importFile(from: tempPath, preferredFilename: preferredFilename)
 	}
 }
