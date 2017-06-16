@@ -178,7 +178,6 @@ extension DownloadController: UICollectionViewDragDelegate {
 		return dragItems(for: session, at: indexPath)
 	}
 	private func dragItems(for session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		guard !session.isRestrictedToDraggingApplication else {return []}
 		switch Section(indexPath) {
 		case .downloads:
 			let url = downloadManager.downloads[indexPath.item].key
@@ -235,16 +234,18 @@ extension DownloadController: UIDropInteractionDelegate {//delete button
 			}
 		}
 	}
-	func dropInteraction(_ interaction: UIDropInteraction, sessionDidEnd session: UIDropSession) {
-		UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut], animations: {
+	func dropInteraction(_ interaction: UIDropInteraction, item: UIDragItem, willAnimateDropWith animator: UIDragAnimating) {
+		animator.addAnimations {
 			self.deleteButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
 			self.deleteButton.tintColor = .red
-		}, completion: {_ in
-			UIView.animate(withDuration: 0.1, delay: 0.5, options: [.curveEaseInOut], animations: {
+		}
+		animator.addCompletion {position in
+			guard position == .end else {return}
+			UIView.animate(withDuration: 0.1, delay: 0, options: [.curveEaseInOut], animations: {
 				self.deleteButton.transform = .identity
 				self.deleteButton.tintColor = nil
 			})
-		})
+		}
 	}
 }
 

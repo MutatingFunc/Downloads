@@ -142,12 +142,13 @@
                     </view>
                     <navigationItem key="navigationItem" title="Downloads" id="QAt-u9-Cwo">
                         <barButtonItem key="leftBarButtonItem" id="BV6-38-o4p">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="BOc-5O-fKb">
-                                <rect key="frame" x="16" y="11" width="22" height="22"/>
+                            <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="BOc-5O-fKb">
+                                <rect key="frame" x="16" y="7" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="BOc-5O-fKb" secondAttribute="height" multiplier="1:1" id="6j1-fk-FUS"/>
                                 </constraints>
+                                <inset key="imageEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
                                 <state key="normal" image="ios7-trash-icon"/>
                                 <connections>
                                     <action selector="deletePressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="LjH-2C-Q8h"/>
