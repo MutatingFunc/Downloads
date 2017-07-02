@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.17" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="iOq-m5-dau">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="iOq-m5-dau">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -16,10 +17,6 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="DownloadController" customModule="Downloads" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -134,11 +131,12 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="5Yc-u2-qeQ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="3Kk-oe-CCn"/>
                             <constraint firstAttribute="bottom" secondItem="5Yc-u2-qeQ" secondAttribute="bottom" id="3qe-4R-cUw"/>
                             <constraint firstItem="5Yc-u2-qeQ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="IHv-Te-RL4"/>
-                            <constraint firstAttribute="trailing" secondItem="5Yc-u2-qeQ" secondAttribute="trailing" id="XH4-h4-jgc"/>
-                            <constraint firstItem="5Yc-u2-qeQ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ziX-GL-NiM"/>
+                            <constraint firstAttribute="trailing" secondItem="5Yc-u2-qeQ" secondAttribute="trailing" id="NaT-Dy-NpC"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="CdJ-Nr-UNe"/>
                     </view>
                     <navigationItem key="navigationItem" title="Downloads" id="QAt-u9-Cwo">
                         <barButtonItem key="leftBarButtonItem" id="BV6-38-o4p">
@@ -176,10 +174,6 @@
         <scene sceneID="qDW-MG-mMs">
             <objects>
                 <viewController id="bEi-L2-b7y" customClass="AddDownloadController" customModule="Downloads" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Ei8-tf-FCd"/>
-                        <viewControllerLayoutGuide type="bottom" id="rb0-Ps-b08"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="JSZ-EC-dc5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="38"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -196,9 +190,10 @@
                         <constraints>
                             <constraint firstItem="XJb-Lo-JnO" firstAttribute="centerY" secondItem="JSZ-EC-dc5" secondAttribute="centerY" id="B0X-Lg-I61"/>
                             <constraint firstItem="XJb-Lo-JnO" firstAttribute="top" secondItem="JSZ-EC-dc5" secondAttribute="top" priority="700" constant="4" id="ooB-5Z-w1T"/>
-                            <constraint firstItem="XJb-Lo-JnO" firstAttribute="leading" secondItem="JSZ-EC-dc5" secondAttribute="leading" constant="4" id="z0v-F6-lOx"/>
-                            <constraint firstAttribute="trailing" secondItem="XJb-Lo-JnO" secondAttribute="trailing" constant="4" id="zyo-tj-rRQ"/>
+                            <constraint firstItem="XJb-Lo-JnO" firstAttribute="leading" secondItem="3jl-cn-kch" secondAttribute="leading" constant="4" id="z0v-F6-lOx"/>
+                            <constraint firstItem="3jl-cn-kch" firstAttribute="trailing" secondItem="XJb-Lo-JnO" secondAttribute="trailing" constant="4" id="zyo-tj-rRQ"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="3jl-cn-kch"/>
                     </view>
                     <size key="freeformSize" width="320" height="38"/>
                     <connections>

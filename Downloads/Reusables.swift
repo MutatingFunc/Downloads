@@ -52,6 +52,13 @@ enum DownloadState {
 	}
 }
 
+func incrementBadge() {
+	let app = UIApplication.shared
+	if app.applicationState != .active {
+		app.applicationIconBadgeNumber += 1
+	}
+}
+
 func preferredFilename(for response: URLResponse) -> String {
 	let queryInfo = response.url?.query.map(fileName(forQuery:))
 	let title =

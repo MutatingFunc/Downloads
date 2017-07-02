@@ -8,6 +8,8 @@
 
 import Foundation
 
+import Additions
+
 private let fileManager = FileManager.default
 private let documents = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
@@ -26,14 +28,18 @@ class DownloadedFileManager {
 }
 
 extension DownloadedFileManager {
-	func importFile(from url: URL, preferredFilename: String?) {
+	func importFile(from url: URL, preferredFilename: String?, copyingSource: Bool = false) {
+		guard !self.files.contains(url) else {return}
+		
 		func importFile(from url: URL, to target: URL) throws {
-			try fileManager.copyItem(at: url, to: target)
+			if copyingSource {
+				try fileManager.copyItem(at: url, to: target)
+			} else {
+				try fileManager.moveItem(at: url, to: target)
+			}
 			self.files.append(target)
 			view?.fileImported(at: self.files.endIndex-1)
 		}
-		
-		guard !self.files.contains(url) else {return}
 		let target = documents.appendingPathComponent(preferredFilename ?? url.lastPathComponent)
 		do {
 			try importFile(from: url, to: target)

@@ -4,10 +4,15 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Download.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>Downloads (Release).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Downloads.xcscheme</key>
 		<dict>
@@ -28,6 +33,11 @@
 			<true/>
 		</dict>
 		<key>1A568C151EE8602C00336FE1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1A75A3861EF44D34002B9663</key>
 		<dict>
 			<key>primary</key>
 			<true/>

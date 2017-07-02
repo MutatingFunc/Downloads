@@ -190,7 +190,7 @@ extension DownloadController: UICollectionViewDragDelegate {
 			let dragItem = UIDragItem(itemProvider: provider)
 			dragItem.localObject = url
 			return [dragItem]
-		case _: return []
+		case .invalid: return []
 		}
 	}
 }
@@ -201,14 +201,14 @@ extension DownloadController: UICollectionViewDropDelegate {
 		return session.canLoadObjects(ofClass: NSURL.self)
 	}
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath target: IndexPath?) -> UICollectionViewDropProposal {
-		return UICollectionViewDropProposal(dropOperation: session.localDragSession == nil ? .copy : .cancel, intent: .unspecified)
+		return UICollectionViewDropProposal(operation: session.localDragSession == nil ? .copy : .cancel, intent: .unspecified)
 	}
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 		guard coordinator.session.localDragSession == nil else {return}
 		coordinator.session.loadObjects(ofClass: NSURL.self) {urls in
 			for case let url as URL in urls {
 				if url.isFileURL {
-					self.fileManager.importFile(from: url, preferredFilename: nil)
+					self.fileManager.importFile(from: url, preferredFilename: nil, copyingSource: true)
 				} else {
 					self.downloadManager.beginDownload(from: url)
 				}
@@ -256,22 +256,23 @@ extension DownloadController: UICollectionViewDataSource, UICollectionViewDelega
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		switch Section(section) {
+		case .invalid: return 0
 		case .downloads: return downloadManager.downloads.keys.count
 		case .files: return fileManager.files.count
-		case _: return 0
 		}
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		let width = collectionView.bounds.width
 		let spacing = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing ?? 0
 		switch Section(indexPath) {
+		case .invalid: return .zero
 		case .downloads: return CGSize(width: width, height: 50)
 		case .files: return CGSize(width: min((width / 2) - spacing, 160), height: 160)
-		case .invalid: return .zero
 		}
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		switch Section(indexPath) {
+		case .invalid: preconditionFailure()
 		case .downloads:
 			let cell = collectionView.dequeueReusableCell(for: indexPath) as DownloadCell
 			cell.downloadDelegate = self
@@ -286,7 +287,6 @@ extension DownloadController: UICollectionViewDataSource, UICollectionViewDelega
 			let url = fileManager.files[indexPath.item]
 			cell.file = (title: url.lastPathComponent, url: url)
 			return cell
-		case _: preconditionFailure()
 		}
 	}
 }

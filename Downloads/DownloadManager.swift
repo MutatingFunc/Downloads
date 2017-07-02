@@ -145,6 +145,7 @@ private class SessionDelegate: NSObject, URLSessionDownloadDelegate {
 		manager.downloadCompleted(task: downloadTask, tempPath: location)
 	}
 	func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+		incrementBadge()
 		if let error = error, !((error as NSError).domain == NSURLErrorDomain && (error as NSError).code == NSURLErrorCancelled) {
 			view?.showError(error, title: "Task Error")
 		}
