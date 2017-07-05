@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		let category = UIMutableUserNotificationCategory()
 		category.identifier = notificationCategory
-		let settings = UIUserNotificationSettings(types: [.alert, .sound], categories: [category])
+		let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: [category])
 		application.registerUserNotificationSettings(settings)
 		return true
 	}
