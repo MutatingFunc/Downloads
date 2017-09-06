@@ -33,14 +33,44 @@ class DownloadController: UIViewController {
 		}
 	}
 	
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		collectionView.collectionViewLayout.invalidateLayout()
+	}
+	
+	override var keyCommands: [UIKeyCommand]? {
+		return [
+			UIKeyCommand(input: "=", modifierFlags: .command, action: #selector(addDownload)),
+			UIKeyCommand(input: "-", modifierFlags: .command, action: #selector(deletePressed)),
+			UIKeyCommand(input: "1", modifierFlags: .command, action: #selector(openFirstDownload)),
+			UIKeyCommand(input: "2", modifierFlags: .command, action: #selector(openSecondDownload)),
+		]
+	}
+	
+	@objc private func addDownload() {
+		performSegue(Segue.textEdit)
+	}
+	@objc private func openFirstDownload() {
+		(collectionView.cellForItem(at: IndexPath(item: 0, section: Section.files.rawValue)) as? FileCell)?.share()
+	}
+	@objc private func openSecondDownload() {
+		(collectionView.cellForItem(at: IndexPath(item: 1, section: Section.files.rawValue)) as? FileCell)?.share()
+	}
+	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == Segue.textEdit.rawValue {
 			let addDownloadController = segue.target as! AddDownloadController
-			segue.targetPopover?.delegate = addDownloadController
+			segue.targetPopover?.delegate = self
 			addDownloadController.onReturn = {[weak self] urlString in
 				self?.downloadManager.beginDownload(from: urlString)
 			}
 		}
+	}
+}
+
+extension DownloadController: UIPopoverPresentationControllerDelegate {
+	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+		return .none
 	}
 }
 
@@ -64,16 +94,6 @@ private func indexSet(_ section: Section) -> IndexSet {
 }
 
 private extension DownloadController {
-	@IBAction func addDownload() {
-		let alert = UIAlertController(title: "Download", message: nil, preferredStyle: .alert)
-		alert.addAction("Download") {[weak self] _ in
-			guard let `self` = self else {return}
-			self.downloadManager.beginDownload(from: alert.textFields!.first!.text ?? "")
-		}
-		alert.addAction("Cancel", style: .cancel)
-		alert.addTextField()
-		alert.present(in: self, animated: true)
-	}
 	@IBAction func deletePressed() {
 		UIAlertController(title: "Clear downloads", message: "Which downloads would you like to stop?", preferredStyle: .actionSheet)
 			.addAction("All", style: .destructive) {[weak self] _ in
@@ -234,6 +254,7 @@ extension DownloadController: UIDropInteractionDelegate {//delete button
 			}
 		}
 	}
+	
 	func dropInteraction(_ interaction: UIDropInteraction, item: UIDragItem, willAnimateDropWith animator: UIDragAnimating) {
 		animator.addAnimations {
 			self.deleteButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
@@ -262,12 +283,16 @@ extension DownloadController: UICollectionViewDataSource, UICollectionViewDelega
 		}
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		let width = collectionView.bounds.width
-		let spacing = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing ?? 0
+		let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
+		let width = collectionView.bounds.width - (flow.map{$0.sectionInset.left + $0.sectionInset.right} ?? 0)
+		let spacing = flow?.minimumInteritemSpacing ?? 0
 		switch Section(indexPath) {
 		case .invalid: return .zero
-		case .downloads: return CGSize(width: width, height: 50)
-		case .files: return CGSize(width: min((width / 2) - spacing, 160), height: 160)
+		case .downloads: return CGSize(width: collectionView.bounds.width, height: 50)
+		case .files:
+			let count = self.collectionView(collectionView, numberOfItemsInSection: indexPath.section)
+			let maxWidth = count == 1 ? width : (width - spacing) / 2
+			return CGSize(width: min(maxWidth, 160), height: 160)
 		}
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -278,8 +303,7 @@ extension DownloadController: UICollectionViewDataSource, UICollectionViewDelega
 			cell.downloadDelegate = self
 			let (url, state) = downloadManager.downloads[indexPath.item]
 			cell.download = (title: url.host ?? "", url: url)
-			let progress = state.task?.fractionCompleted
-			cell.progress = progress.map(Float.init)
+			cell.progress = (state.task?.fractionCompleted).map(Float.init)
 			return cell
 		case .files:
 			let cell = collectionView.dequeueReusableCell(for: indexPath) as FileCell

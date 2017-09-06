@@ -20,7 +20,7 @@ protocol DownloadedFileView: ErrorView {
 }
 
 class DownloadedFileManager {
-	private(set) var files: [URL] = (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil))?.filter{!$0.hasDirectoryPath} ?? []
+	private(set) var files: [URL] = (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil))?.filter{¬$0.hasDirectoryPath} ?? []
 	
 	weak var view: DownloadedFileView?
 	private init() {}
@@ -29,7 +29,7 @@ class DownloadedFileManager {
 
 extension DownloadedFileManager {
 	func importFile(from url: URL, preferredFilename: String?, copyingSource: Bool = false) {
-		guard !self.files.contains(url) else {return}
+		guard ¬self.files.contains(url) else {return}
 		
 		func importFile(from url: URL, to target: URL) throws {
 			if copyingSource {
@@ -52,7 +52,7 @@ extension DownloadedFileManager {
 			let ext = target.pathExtension
 			for num in 2...99 {
 				let target = documents.appendingPathComponent("\(title) \(num).\(ext)")
-				if (try? importFile(from: url, to: target)) != nil {
+				if (try? importFile(from: url, to: target)) ¬= nil {
 					return
 				}
 			}

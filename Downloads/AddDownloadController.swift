@@ -31,8 +31,3 @@ extension AddDownloadController: UITextFieldDelegate {
 	}
 }
 
-extension AddDownloadController: UIPopoverPresentationControllerDelegate {
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		return .popover
-	}
-}

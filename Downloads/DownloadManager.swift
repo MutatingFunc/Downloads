@@ -41,7 +41,7 @@ class DownloadManager {
 		self.session.getTasksWithCompletionHandler {_, _, downloadTasks in
 			DispatchQueue.main.async {
 				for task in downloadTasks {
-					if let url = task.originalRequest?.url, !self.downloads.keys.contains(url) {
+					if let url = task.originalRequest?.url, ¬self.downloads.keys.contains(url) {
 						task.resume()
 						self.downloads[url] = .active(task)
 						self.view?.downloadBegan(at: self.downloads.endIndex-1)
@@ -56,16 +56,16 @@ class DownloadManager {
 extension DownloadManager {
 	@discardableResult func beginDownload(from urlString: String) -> Bool {
 		let error = {_ = self.view?.showError($0, title: "Invalid URL")}
-		guard !urlString.isEmpty else {error(""); return false}
+		guard ¬urlString.isEmpty else {error(""); return false}
 		let urlString = urlString.contains("://")
 			? urlString
 			: "http://" + urlString
-		guard let url = URL(string: urlString), !url.isFileURL && url.host != nil else {error(urlString); return false}
+		guard let url = URL(string: urlString), ¬url.isFileURL && url.host ¬= nil else {error(urlString); return false}
 		beginDownload(from: url)
 		return true
 	}
 	func beginDownload(from url: URL) {
-		guard !downloads.keys.contains(url) else {return}
+		guard ¬downloads.keys.contains(url) else {return}
 		let task = session.downloadTask(with: url)
 		downloads[url] = .active(task)
 		task.resume()
@@ -146,7 +146,7 @@ private class SessionDelegate: NSObject, URLSessionDownloadDelegate {
 	}
 	func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
 		incrementBadge()
-		if let error = error, !((error as NSError).domain == NSURLErrorDomain && (error as NSError).code == NSURLErrorCancelled) {
+		if let error = error, ¬((error as NSError).domain == NSURLErrorDomain && (error as NSError).code == NSURLErrorCancelled) {
 			view?.showError(error, title: "Task Error")
 		}
 	}

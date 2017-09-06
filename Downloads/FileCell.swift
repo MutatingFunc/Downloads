@@ -8,6 +8,7 @@
 
 import UIKit
 import AVKit
+import MobileCoreServices
 
 import Additions
 
@@ -44,16 +45,24 @@ class FileCell: UICollectionViewCell, ReuseIdentifiable {
 		self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(share)))
 	}
 	
-	@IBAction private func share() {
+	@IBAction func share() {
 		guard let file = file else {return}
 		shareDelegate?.shareFile(at: file.url, from: self, keepingOriginal: true)
 	}
 }
 
 private func imagePreview(url: URL) -> UIImage? {
+	guard
+		let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, url.pathExtension as CFString, nil)?.takeRetainedValue(),
+		UTTypeConformsTo(uti, kUTTypeImage)
+	else {return nil}
 	return (try? Data(contentsOf: url)).flatMap(UIImage.init)
 }
 private func videoPreview(url: URL) -> UIImage? {
+	guard
+		let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, url.pathExtension as CFString, nil)?.takeRetainedValue(),
+		UTTypeConformsTo(uti, kUTTypeMovie)
+	else {return nil}
 	let generator = AVAssetImageGenerator(asset: AVAsset(url: url))
 	generator.appliesPreferredTrackTransform = true
 	if let image = try? generator.copyCGImage(at: CMTime(value: 1, timescale: 60), actualTime: nil) {
