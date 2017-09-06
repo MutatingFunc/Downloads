@@ -22,6 +22,10 @@ class DownloadController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		if #available(iOS 11, *) {
+			//fix for large title not shrinking on scroll
+			self.navigationController?.navigationBar.prefersLargeTitles = true
+		}
 		fileManager.view = self
 		downloadManager.view = self
 		collectionView.dataSource = self
