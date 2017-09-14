@@ -42,23 +42,17 @@ class DownloadController: UIViewController {
 		collectionView.collectionViewLayout.invalidateLayout()
 	}
 	
-	override var keyCommands: [UIKeyCommand]? {
-		return [
-			UIKeyCommand(input: "=", modifierFlags: .command, action: #selector(addDownload)),
-			UIKeyCommand(input: "-", modifierFlags: .command, action: #selector(deletePressed)),
-			UIKeyCommand(input: "1", modifierFlags: .command, action: #selector(openFirstDownload)),
-			UIKeyCommand(input: "2", modifierFlags: .command, action: #selector(openSecondDownload)),
-		]
-	}
-	
-	@objc private func addDownload() {
+	@IBAction private func addDownload() {
 		performSegue(Segue.textEdit)
 	}
-	@objc private func openFirstDownload() {
+	@IBAction private func openFirstDownload() {
 		(collectionView.cellForItem(at: IndexPath(item: 0, section: Section.files.rawValue)) as? FileCell)?.share()
 	}
-	@objc private func openSecondDownload() {
+	@IBAction private func openSecondDownload() {
 		(collectionView.cellForItem(at: IndexPath(item: 1, section: Section.files.rawValue)) as? FileCell)?.share()
+	}
+	@IBAction private func openThirdDownload() {
+		(collectionView.cellForItem(at: IndexPath(item: 2, section: Section.files.rawValue)) as? FileCell)?.share()
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -288,14 +282,19 @@ extension DownloadController: UICollectionViewDataSource, UICollectionViewDelega
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
-		let width = collectionView.bounds.width - (flow.map{$0.sectionInset.left + $0.sectionInset.right} ?? 0)
+		let flowInset = flow.map{$0.sectionInset} ?? UIEdgeInsets()
+		var safeAreaInsets = UIEdgeInsets()
+		if #available(iOS 11, *) {
+			safeAreaInsets = collectionView.safeAreaInsets
+		}
+		let bounds = collectionView.bounds.insetBy(flowInset).insetBy(safeAreaInsets)
 		let spacing = flow?.minimumInteritemSpacing ?? 0
 		switch Section(indexPath) {
 		case .invalid: return .zero
-		case .downloads: return CGSize(width: collectionView.bounds.width, height: 50)
+		case .downloads: return CGSize(width: collectionView.bounds.insetBy(safeAreaInsets).width, height: 50)
 		case .files:
 			let count = self.collectionView(collectionView, numberOfItemsInSection: indexPath.section)
-			let maxWidth = count == 1 ? width : (width - spacing) / 2
+			let maxWidth = count == 1 ? bounds.width : (bounds.width - spacing) / 2
 			return CGSize(width: min(maxWidth, 160), height: 160)
 		}
 	}

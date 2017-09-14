@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13189.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="iOq-m5-dau">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="iOq-m5-dau">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13165.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -161,6 +161,13 @@
                             </button>
                         </barButtonItem>
                     </navigationItem>
+                    <keyCommands>
+                        <keyCommand input="+" modifierFlags="1048576" actionName="addDownload" discoverabilityTitle="Add"/>
+                        <keyCommand input="-" modifierFlags="1048576" actionName="deletePressed" discoverabilityTitle="Delete"/>
+                        <keyCommand input="1" modifierFlags="1048576" actionName="openFirstDownload" discoverabilityTitle="Share #1"/>
+                        <keyCommand input="2" modifierFlags="1048576" actionName="openSecondDownload" discoverabilityTitle="Share #2"/>
+                        <keyCommand input="3" modifierFlags="1048576" actionName="openThirdDownload" discoverabilityTitle="Share #3"/>
+                    </keyCommands>
                     <connections>
                         <outlet property="collectionView" destination="5Yc-u2-qeQ" id="G6A-vJ-eYP"/>
                         <outlet property="deleteButton" destination="BOc-5O-fKb" id="fbk-fl-mdR"/>
