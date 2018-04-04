@@ -66,7 +66,10 @@ func preferredFilename(for response: URLResponse) -> String {
 			?? response.suggestedFilename
 			?? response.url?.lastPathComponent
 			?? "file"
-	return queryInfo?.ext.map{title + "." + $0} ?? title
+	if let ext = queryInfo?.ext.map({".\($0)"}), title.hasSuffix(ext) == false {
+		return title + ext
+	}
+	return title
 }
 private func fileName(forQuery query: String) -> (title: String?, ext: String?)  {
 	let params = query.components(separatedBy: "&")
