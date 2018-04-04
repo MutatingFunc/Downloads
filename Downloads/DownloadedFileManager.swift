@@ -20,7 +20,7 @@ protocol DownloadedFileView: ErrorView {
 }
 
 class DownloadedFileManager {
-	private(set) var files: [URL] = (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil))?.filter{¬$0.hasDirectoryPath} ?? []
+	private(set) var files: [URL] = (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil))?.filter{!$0.hasDirectoryPath} ?? []
 	
 	weak var view: DownloadedFileView?
 	private init() {}
@@ -29,7 +29,7 @@ class DownloadedFileManager {
 
 extension DownloadedFileManager {
 	func importFile(from url: URL, preferredFilename: String?, copyingSource: Bool = false) {
-		guard ¬self.files.contains(url) else {return}
+		guard !self.files.contains(url) else {return}
 		
 		func importFile(from url: URL, to target: URL) throws {
 			if copyingSource {
@@ -40,24 +40,23 @@ extension DownloadedFileManager {
 			self.files.append(target)
 			view?.fileImported(at: self.files.endIndex-1)
 		}
-		let target = documents.appendingPathComponent(preferredFilename ?? url.lastPathComponent)
-		do {
-			try importFile(from: url, to: target)
-		} catch {
-			guard (error as NSError).domain == NSCocoaErrorDomain && (error as NSError).code == NSFileWriteFileExistsError else {
-				view?.showError(error, title: "Import Error")
+		let initialTarget = documents.appendingPathComponent(preferredFilename ?? url.lastPathComponent)
+		let title = initialTarget.deletingPathExtension().lastPathComponent
+		var target = initialTarget
+		for num in 2...100 {
+			do {
+				try importFile(from: url, to: target)
 				return
-			}
-			let title = target.deletingPathExtension().lastPathComponent
-			let ext = target.pathExtension
-			for num in 2...99 {
-				let target = documents.appendingPathComponent("\(title) \(num).\(ext)")
-				if (try? importFile(from: url, to: target)) ¬= nil {
+			} catch {
+				guard (error as NSError).domain == NSCocoaErrorDomain && (error as NSError).code == NSFileWriteFileExistsError else {
+					view?.showError(error, title: "Import Error")
 					return
 				}
+				let ext = target.pathExtension
+				target = documents.appendingPathComponent("\(title) \(num).\(ext)")
 			}
-			view?.showError("File named \"\(target.lastPathComponent)\" already exists", title: "Import Error")
 		}
+		view?.showError("File named \"\(initialTarget.lastPathComponent)\" already exists", title: "Import Error")
 	}
 	func deleteFile(at url: URL) {
 		guard let index = files.index(of: url) else {return}

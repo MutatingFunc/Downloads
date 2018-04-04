@@ -124,6 +124,7 @@
 		1A85FA371EE9D9AC002F84BD /* DownloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		1A85FA391EE9DAF7002F84BD /* Additions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Additions.xcodeproj; path = "../../Frameworks/StandardAdditions 2.0/Additions.xcodeproj"; sourceTree = "<group>"; };
 		1ABFE52F1EF1420100D053BF /* Reusables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusables.swift; sourceTree = "<group>"; };
+		1AD978A71F742A2200CC31F1 /* Downloads.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Downloads.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +186,7 @@
 		1A568BF91EE8602C00336FE1 /* Downloads */ = {
 			isa = PBXGroup;
 			children = (
+				1AD978A71F742A2200CC31F1 /* Downloads.entitlements */,
 				1A568BFA1EE8602C00336FE1 /* AppDelegate.swift */,
 				1ABFE52F1EF1420100D053BF /* Reusables.swift */,
 				1A85FA351EE9D945002F84BD /* DownloadManager.swift */,
@@ -330,6 +332,9 @@
 						CreatedOnToolsVersion = 9.0;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.iCloud = {
 								enabled = 0;
 							};
 						};

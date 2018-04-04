@@ -46,6 +46,6 @@ class DownloadCell: UICollectionViewCell, ReuseIdentifiable {
 	
 	@IBAction private func togglePaused() {
 		guard let download = download else {return}
-		downloadDelegate?.setPaused(progress ¬= nil, forDownloadFrom: download.url)
+		downloadDelegate?.setPaused(progress != nil, forDownloadFrom: download.url)
 	}
 }

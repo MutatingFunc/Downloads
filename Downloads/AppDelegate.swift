@@ -17,7 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 	
 	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
-		//untested
 		DownloadManager.shared.backgroundEventCompletionHandler = completionHandler
 		let notification = UILocalNotification()
 		if let settings = application.currentUserNotificationSettings?.types {
