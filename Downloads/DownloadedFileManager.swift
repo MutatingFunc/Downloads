@@ -20,8 +20,25 @@ protocol DownloadedFileView: ErrorView {
 }
 
 class DownloadedFileManager {
-	private(set) var files: [URL] = (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil))?.filter{!$0.hasDirectoryPath} ?? []
+	static func getFiles() -> [URL]? {
+		return (try? fileManager.contentsOfDirectory(at: documents, includingPropertiesForKeys: nil))?.filter{!$0.hasDirectoryPath}
+	}
+	private(set) var files: [URL] = getFiles() ?? []
 	
+	private func makeTimer() -> Timer? {
+		if #available(iOS 10.0, *) {
+			//only needs to run from iOS 11 onwards anyway, where the Files app is likely to change stuff
+			return Timer.scheduledTimer(withTimeInterval: 3, repeats: true) {[weak self] _ in
+				self?.updateFiles()
+			}
+		} else {return nil}
+	}
+	private var timer: Timer? {
+		didSet {oldValue?.invalidate()}
+	}
+	var autoUpdates = false {
+		didSet {timer = autoUpdates ? self.makeTimer() : nil}
+	}
 	weak var view: DownloadedFileView?
 	private init() {}
 	static let shared = DownloadedFileManager()
@@ -78,6 +95,21 @@ extension DownloadedFileManager {
 			view?.showError(error, title: "Deletion error")
 		}
 		view?.filesDeleted()
+	}
+	
+	func updateFiles() {
+		guard let newFiles = DownloadedFileManager.getFiles().map(Set.init) else {return}
+		let oldFiles = Set(self.files)
+		for removed in oldFiles.subtracting(newFiles) {
+			let index = files.index(of: removed)!
+			self.files.remove(at: index)
+			view?.fileDeleted(at: index)
+		}
+		for added in newFiles.subtracting(oldFiles) {
+			let index = self.files.endIndex
+			self.files.append(added)
+			view?.fileImported(at: index)
+		}
 	}
 }
 
