@@ -18,7 +18,7 @@ class ActionRequestHandler: NSObject, NSExtensionRequestHandling {
 		
 		let itemProvider = context.inputItems.lazy
 			.flatMap{($0 as? NSExtensionItem)?.attachments ?? []}
-			.flatMap{$0 as? NSItemProvider}
+			.compactMap{$0 as? NSItemProvider}
 			.first{$0.hasItemConformingToTypeIdentifier(String(kUTTypePropertyList))}
 		
 		if let itemProvider = itemProvider {

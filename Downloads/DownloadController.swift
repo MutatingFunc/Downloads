@@ -244,7 +244,7 @@ extension DownloadController: UIDropInteractionDelegate {//delete button
 	}
 	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
 		guard let localSession = session.localDragSession else {return}
-		for url in localSession.items.lazy.flatMap({$0.localObject as? URL}) {
+		for url in localSession.items.lazy.compactMap({$0.localObject as? URL}) {
 			if url.isFileURL {
 				fileManager.deleteFile(at: url)
 			} else {

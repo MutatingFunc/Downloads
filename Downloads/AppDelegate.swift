@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		completionHandler()
 	}
 	
-	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 		var urlString = url.absoluteString
 		if urlString.hasPrefix("dl") {
 			urlString.removeFirst(2)
@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return DownloadManager.shared.beginDownload(from: urlString)
 	}
 	
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		let category = UIMutableUserNotificationCategory()
 		category.identifier = notificationCategory
 		let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: [category])
